@@ -9,7 +9,10 @@ const app = express()
 app.use(cors({ origin: 'http://localhost:3000' }))  // allow React to call us
 app.use(express.json())                              // let us read JSON request bodies
 
-// A simple test route — we'll replace this with real routes later
+app.use('/api/stats', require('./routes/stats'))
+app.use('/api/leads', require('./routes/leads'))
+app.use('/api/calls', require('./routes/calls'))
+
 app.get('/', (req, res) => {
     res.json({ message: 'Voice Agent API is running' })
 })
