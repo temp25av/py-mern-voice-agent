@@ -5,13 +5,19 @@ require('dotenv').config()
 
 const app = express()
 
+
+const statsRouter = require('./routes/stats')
+const leadsRouter = require('./routes/leads')
+const callsRouter = require('./routes/calls')
+
+
 // Middleware — these run on every request before it hits your routes
 app.use(cors({ origin: 'http://localhost:3000' }))  // allow React to call us
 app.use(express.json())                              // let us read JSON request bodies
 
-app.use('/api/stats', require('./routes/stats'))
-app.use('/api/leads', require('./routes/leads'))
-app.use('/api/calls', require('./routes/calls'))
+app.use('/api/stats', statsRouter)
+app.use('/api/leads', leadsRouter)
+app.use('/api/calls', callsRouter)
 
 app.get('/', (req, res) => {
     res.json({ message: 'Voice Agent API is running' })
