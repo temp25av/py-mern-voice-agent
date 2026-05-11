@@ -7,16 +7,18 @@ function StatsPage() {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        // useEffect with empty [] runs once when component loads
-        API.get('/stats')
-            .then(res => {
+        const fetchStats = async () => {
+            try {
+                const res = await API.get('/stats')
                 setStats(res.data)
-                setLoading(false)
-            })
-            .catch(err => {
+            } catch (err) {
                 setError('Could not load stats')
+            } finally {
                 setLoading(false)
-            })
+            }
+        }
+
+        fetchStats()
     }, [])
 
     if (loading) return <p>Loading stats...</p>
@@ -34,7 +36,6 @@ function StatsPage() {
     )
 }
 
-// Small reusable component — lives here for now, we'll move it later
 function StatCard({ label, value }) {
     return (
         <div style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px', minWidth: '140px' }}>

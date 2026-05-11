@@ -4,11 +4,10 @@ import API from '../api'
 function CallsPage() {
     const [mobile, setMobile] = useState('')
     const [leadName, setLeadName] = useState('')
-    const [status, setStatus] = useState(null)  // null | 'loading' | 'success' | 'error'
+    const [status, setStatus] = useState(null)
     const [message, setMessage] = useState('')
 
-    const handleCall = () => {
-        // Basic validation before hitting the API
+    const handleCall = async () => {
         if (!mobile || mobile.length < 10) {
             setStatus('error')
             setMessage('Please enter a valid mobile number')
@@ -18,17 +17,16 @@ function CallsPage() {
         setStatus('loading')
         setMessage('')
 
-        API.post('/calls/make', { mobile, leadName })
-            .then(res => {
-                setStatus('success')
-                setMessage('Call initiated successfully!')
-                setMobile('')
-                setLeadName('')
-            })
-            .catch(err => {
-                setStatus('error')
-                setMessage('Could not initiate call. Is Python running?')
-            })
+        try {
+            await API.post('/calls/make', { mobile, leadName })
+            setStatus('success')
+            setMessage('Call initiated successfully!')
+            setMobile('')
+            setLeadName('')
+        } catch (err) {
+            setStatus('error')
+            setMessage('Could not initiate call. Is Python running?')
+        }
     }
 
     return (
@@ -74,7 +72,6 @@ function CallsPage() {
                     {status === 'loading' ? 'Initiating...' : 'Make Call'}
                 </button>
 
-                {/* Show feedback message */}
                 {message && (
                     <p style={{ color: status === 'error' ? 'red' : 'green' }}>
                         {message}

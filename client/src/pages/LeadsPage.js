@@ -7,15 +7,18 @@ function LeadsPage() {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        API.get('/leads')
-            .then(res => {
+        const fetchLeads = async () => {
+            try {
+                const res = await API.get('/leads')
                 setLeads(res.data)
-                setLoading(false)
-            })
-            .catch(err => {
+            } catch (err) {
                 setError('Could not load leads')
+            } finally {
                 setLoading(false)
-            })
+            }
+        }
+
+        fetchLeads()
     }, [])
 
     if (loading) return <p>Loading leads...</p>
@@ -56,7 +59,6 @@ function LeadsPage() {
     )
 }
 
-// Inline styles as variables — cleaner than repeating objects
 const th = { padding: '12px', textAlign: 'left', fontWeight: '600' }
 const td = { padding: '12px' }
 
